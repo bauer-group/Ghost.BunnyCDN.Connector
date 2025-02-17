@@ -10,15 +10,25 @@ class WebhookController {
         this.webhookService = webhookService;
     }
 
-    public handleWebhook = async (req: Request, res: Response): Promise<void> => {
+    public handleWebhook = async (req: Request, res: Response): Promise<Response> => {
         try {
+            if (!req.body || typeof req.body !== 'object') {
+                logger.error("Fehler: Ungültiger oder leerer JSON-Body.");
+                return res.status(400).json({ Error: "Bad Request: Invalid JSON body" });
+            }
+
+            if (!req.body.event) {
+                logger.error("Fehler: 'event' im JSON-Body fehlt.");
+                return res.status(400).json({ Error: "Bad Request: 'event' missing" });
+            }
+
             const payload: WebhookPayload = req.body;
             logger.debug(`Empfange Webhook: ${JSON.stringify(payload)}`);
             this.webhookService.processWebhook(payload.event, payload.data);
-            res.status(200).json({ status: 'success', message: 'Webhook processed successfully' });
+            return res.status(200).json({ Status: "OK" });
         } catch (error: any) {
-            logger.error(`Fehler bei der Verarbeitung des Webhooks: ${error.message}`);
-            res.status(500).json({ status: 'error', message: 'Webhook processing failed', error: error.message });
+            logger.error(`Fehler im WebhookController: ${error.message}`);
+            return res.status(400).json({ Error: "Errors during processing" });
         }
     };
 }

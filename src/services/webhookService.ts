@@ -24,6 +24,16 @@ class WebhookService {
         this.webhookIds = this.storage.load();
     }
 
+    registerWebhook(event: string, callback: Function): void {
+        this.webhooks.set(event, callback);
+        logger.debug(`Callback für Event "${event}" registriert.`);
+    }
+
+    private handleEventCallback(event: string, payload: any): void {
+        logger.debug(`Callback für Event "${event}" ausgeführt mit Payload: ${JSON.stringify(payload)}`);
+        // Hier kannst du die Payload weiterverarbeiten
+    }
+
     async initializeWebhooks() {
         const requiredWebhooks = [
             "site.changed",
@@ -79,6 +89,9 @@ class WebhookService {
                             logger.error(`Fehler beim Aktualisieren des Webhooks für Event "${event}": Ungültige Antwort vom Server.`);
                         }
                     }
+                    
+                    this.registerWebhook(event, (payload: any) => this.handleEventCallback(event, payload));
+
                 } catch (error: any) {
                     logger.error(`Fehler beim Registrieren des Webhooks für Event "${event}": ${error.message}`);
                 }
@@ -100,16 +113,12 @@ class WebhookService {
         if (webhookId) {
             await this.ghostAdminAPI.webhooks.delete({ id: webhookId });
             delete this.webhookIds[event];
+            this.webhooks.delete(event);
             this.storage.save(this.webhookIds);
             logger.info(`Webhook für Event "${event}" gelöscht.`);
         } else {
             logger.warn(`Kein Webhook für Event "${event}" gefunden.`);
         }
-    }
-
-    registerWebhook(event: string, callback: Function): void {
-        this.webhooks.set(event, callback);
-        logger.debug(`Webhook für Event "${event}" registriert.`);
     }
 
     processWebhook(event: string, payload: any): void {

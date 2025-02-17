@@ -10,23 +10,20 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+app.use((err: SyntaxError, _req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (err instanceof SyntaxError && 'body' in err) {
+        logger.error('Fehler beim Parsen des JSON-Bodys:', err.message);
+        return res.status(400).send({ error: 'Invalid JSON!' });
+    }
+    next();
+});
+
 Config.validate();
 
 const webhookService = new WebhookService();
 const webhookController = new WebhookController(webhookService);
 
 app.post('/webhook', (req, res) => webhookController.handleWebhook(req, res));
-
-app.delete('/webhook/:event', async (req, res) => {
-    const event = req.params.event;
-    try {
-        await webhookService.deleteWebhook(event);
-        res.status(204).send();
-    } catch (error: any) {
-        logger.error(`⚠️ Fehler beim Löschen des Webhooks: ${error.message}`);
-        res.status(500).send({ error: error.message });
-    }
-});
 
 app.listen(port, async () => {
     try {
