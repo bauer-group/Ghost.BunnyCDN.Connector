@@ -9,7 +9,23 @@ class Config {
     public static GHOST_WEBHOOK_SECRET: string = process.env.GHOST_WEBHOOK_SECRET || '';
     public static GHOST_WEBHOOK_TARGET: string = process.env.GHOST_WEBHOOK_TARGET || 'http://localhost:3000';
 
-    public static validate() {
+    public static RequiredWebhooks = [
+        "site.changed",
+        "post.added",
+        "post.deleted",
+        "post.edited",
+        "post.published",
+        "post.published.edited",
+        "post.unpublished",
+        "page.added",
+        "page.deleted",
+        "page.edited",
+        "page.published",
+        "page.published.edited",
+        "page.unpublished"
+    ];
+
+    public static Validate() {
         if (!this.GHOST_URL) {
             throw new Error('GHOST_URL ist nicht gesetzt');
         }

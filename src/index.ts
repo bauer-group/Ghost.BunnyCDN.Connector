@@ -18,12 +18,17 @@ app.use((err: SyntaxError, _req: express.Request, res: express.Response, next: e
     next();
 });
 
-Config.validate();
+Config.Validate();
 
 const webhookService = new WebhookService();
 const webhookController = new WebhookController(webhookService);
 
-app.post('/webhook', (req, res) => webhookController.handleWebhook(req, res));
+const requiredWebhooks = Config.RequiredWebhooks;
+
+requiredWebhooks.forEach(event => {
+    const eventRoute = event.replace(/\./g, '-');
+    app.post(`/webhook/${eventRoute}`, (req, res) => webhookController.handleWebhook(req, res));
+});
 
 app.listen(port, async () => {
     try {

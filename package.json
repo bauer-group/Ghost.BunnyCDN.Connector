@@ -8,7 +8,8 @@
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
     "test": "jest",
-    "install-dependencies": "npm install"
+    "install-dependencies": "npm install",
+    "docker-debug": "docker compose --env-file .env up --build"
   },
   "repository": {
     "type": "git",

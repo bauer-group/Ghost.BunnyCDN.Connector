@@ -8,10 +8,9 @@ class Logger {
         this.logger = createLogger({
             level: 'debug',
             format: format.combine(
-                format.colorize(),
                 format.timestamp(),
                 format.printf(({ timestamp, level, message }) => {
-                    let icon = '';
+                    let icon = '';    
                     switch (level) {
                         case 'info':
                             icon = 'ℹ️';
@@ -25,12 +24,13 @@ class Logger {
                         case 'debug':
                             icon = '🐛';
                             break;
-                            
                         default:
                             icon = '🔧';
                     }
-                    return `${timestamp} ${icon} ${level}: ${message}`;
-                })
+                
+                    return `${timestamp} ${icon} ${level.toUpperCase()}: ${message}`;
+                }),
+                format.colorize()                
             ),
             transports: [
                 new transports.Console()

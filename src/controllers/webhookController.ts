@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import WebhookService from '../services/webhookService';
-import { WebhookPayload, WebhookResponse } from '../types';
+import { WebhookPayload, WebhookResponse } from '../interfaces/webhookInterfaces';
 import logger from '../utils/logger';
 
 class WebhookController {
@@ -14,21 +14,20 @@ class WebhookController {
         try {
             if (!req.body || typeof req.body !== 'object') {
                 logger.error("Fehler: Ungültiger oder leerer JSON-Body.");
-                return res.status(400).json({ Error: "Bad Request: Invalid JSON body" });
+                return res.status(400).json({ Status: 'Error', Message: "Bad Request: Invalid JSON body" });
             }
 
-            if (!req.body.event) {
-                logger.error("Fehler: 'event' im JSON-Body fehlt.");
-                return res.status(400).json({ Error: "Bad Request: 'event' missing" });
+            const event = req.path.split('/').filter(Boolean).pop()?.replace(/-/g, '.');
+            if (!event) {
+                return res.status(400).json({ Status: 'Error', Message: 'Invalid Webhook Endpoint' });                
             }
-
             const payload: WebhookPayload = req.body;
             logger.debug(`Empfange Webhook: ${JSON.stringify(payload)}`);
-            this.webhookService.processWebhook(payload.event, payload.data);
-            return res.status(200).json({ Status: "OK" });
+            const response: WebhookResponse = this.webhookService.processWebhook(event, payload);
+            return res.status(response.Status.toLowerCase() === 'success' ? 200 : 400).json(response);
         } catch (error: any) {
             logger.error(`Fehler im WebhookController: ${error.message}`);
-            return res.status(400).json({ Error: "Errors during processing" });
+            return res.status(400).json({ Status: 'Error', Message: "Errors during processing" });
         }
     };
 }
