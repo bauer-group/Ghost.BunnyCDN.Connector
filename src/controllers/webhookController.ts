@@ -1,3 +1,8 @@
+import { Request, Response } from 'express';
+import WebhookService from '../services/webhookService';
+import { WebhookPayload, WebhookResponse } from '../types';
+import logger from '../utils/logger';
+
 class WebhookController {
     private webhookService: WebhookService;
 
@@ -8,9 +13,11 @@ class WebhookController {
     public handleWebhook = async (req: Request, res: Response): Promise<void> => {
         try {
             const payload: WebhookPayload = req.body;
-            const response: WebhookResponse = await this.webhookService.processWebhook(payload);
-            res.status(200).json(response);
-        } catch (error) {
+            logger.debug(`Empfange Webhook: ${JSON.stringify(payload)}`);
+            this.webhookService.processWebhook(payload.event, payload.data);
+            res.status(200).json({ status: 'success', message: 'Webhook processed successfully' });
+        } catch (error: any) {
+            logger.error(`Fehler bei der Verarbeitung des Webhooks: ${error.message}`);
             res.status(500).json({ message: 'Webhook processing failed', error: error.message });
         }
     };
