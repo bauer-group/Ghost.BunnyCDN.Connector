@@ -1,0 +1,41 @@
+{
+  "name": "@bauer-group/ghost-bunnycdn-connector",
+  "version": "0.0.1",
+  "description": "Ghost CMS Service für automatische BunnyCDN Cache-Invalidierung",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bauer-group/ghost-bunnycdn-connector.git"
+  },
+  "keywords": [
+    "node",
+    "typescript",
+    "webhooks",
+    "bunnycdn"
+  ],
+  "author": "BAUER GROUP (Karl Bauer)",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.20.0",
+    "body-parser": "^1.20.0",
+    "axios": "^1.6.0",
+    "@tryghost/admin-api": "^1.10.0"    
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4",
+    "ts-node": "^10.4.0",
+    "jest": "^27.0.6",
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.11.7",
+    "@types/express": "^4.17.13"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
