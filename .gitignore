@@ -131,3 +131,6 @@ dist
 
 # Dotenv environment variables file
 .env
+
+# Runtime data files
+runtime-data

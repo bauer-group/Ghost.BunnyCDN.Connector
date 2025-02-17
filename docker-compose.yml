@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: no
-    container_name: ghost-bunnycdn-connector
+    container_name: ghost-bunnycdn-connector-dev
     expose:
       - 3000/tcp
     ports:
@@ -14,6 +14,8 @@ services:
       - TZ=Etc/UTC
     env_file:
       - .env
+    volumes:
+      - ./runtime-data:/data
     networks:
       - development
 

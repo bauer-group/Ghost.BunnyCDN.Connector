@@ -17,13 +17,23 @@ const webhookController = new WebhookController(webhookService);
 
 app.post('/webhook', (req, res) => webhookController.handleWebhook(req, res));
 
-app.listen(port, async () => {
-    logger.info(`🔧 Server läuft auf http://0.0.0.0:${port}`);    
+app.delete('/webhook/:event', async (req, res) => {
+    const event = req.params.event;
+    try {
+        await webhookService.deleteWebhook(event);
+        res.status(204).send();
+    } catch (error: any) {
+        logger.error(`⚠️ Fehler beim Löschen des Webhooks: ${error.message}`);
+        res.status(500).send({ error: error.message });
+    }
+});
 
+app.listen(port, async () => {
     try {
         await webhookService.initializeWebhooks();
-        logger.info("✅ Webhooks erfolgreich initialisiert!");
     } catch (error: any) {
         logger.error(`⚠️ Fehler beim Initialisieren der Webhooks: ${error.message}`);
     }
+
+    logger.info(`🚀 Server: ${Config.GHOST_WEBHOOK_TARGET} (http://0.0.0.0:${port})`);
 });

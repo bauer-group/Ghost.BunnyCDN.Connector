@@ -40,6 +40,16 @@ Um die Anwendung in einem Docker-Container auszuführen, kannst du die folgenden
 
 Die Anwendung registriert Webhooks beim Start und verarbeitet eingehende Webhook-Anfragen über den `WebhookController`. Du kannst die Webhooks an die definierte URL senden, um die Verarbeitung zu testen.
 
+### Webhooks löschen
+
+Um einen Webhook zu löschen, sende eine DELETE-Anfrage an die folgende URL:
+
+```
+DELETE /webhook/:event
+```
+
+Ersetze `:event` durch das Event, das du löschen möchtest.
+
 ## Lizenz
 
 Dieses Projekt ist unter der MIT-Lizenz lizenziert. Weitere Informationen findest du in der LICENSE-Datei.

@@ -12,7 +12,7 @@ class Logger {
                 format.timestamp(),
                 format.printf(({ timestamp, level, message }) => {
                     let icon = '';
-                    switch (level) {
+                    switch (level.toLowerCase()) {
                         case 'info':
                             icon = 'ℹ️';
                             break;

@@ -18,7 +18,7 @@ class WebhookController {
             res.status(200).json({ status: 'success', message: 'Webhook processed successfully' });
         } catch (error: any) {
             logger.error(`Fehler bei der Verarbeitung des Webhooks: ${error.message}`);
-            res.status(500).json({ message: 'Webhook processing failed', error: error.message });
+            res.status(500).json({ status: 'error', message: 'Webhook processing failed', error: error.message });
         }
     };
 }
