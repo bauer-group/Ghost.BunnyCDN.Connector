@@ -6,14 +6,52 @@ import WebhookService from './services/webhookService';
 import WebhookController from './controllers/webhookController';
 import Config from './config/config';
 import logger from './utils/logger';
+import path from 'path';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Reverse Proxy
+app.set('trust proxy', 1); //trust first proxy
+//app.set('trust proxy', true); //trust all proxies
 
 // Middleware setup
 app.use(helmet());
 app.use(compression());
 app.use(bodyParser.json());
+
+// Rate limiting middleware
+const RATE_LIMIT_MESSAGE = { Status: 'Error', Message: 'Too many requests, please try again later.' };
+const limiter = rateLimit({
+    windowMs: 60 * 1000 * 60, // 60 minutes window
+    max: 3600, // limit each IP to 3600 requests per window
+    message: RATE_LIMIT_MESSAGE,
+    handler: (req: Request, res: Response) => {
+        logger.warn(`Rate limit exceeded for IP: ${req.ip}`);
+        res.status(429).send(RATE_LIMIT_MESSAGE);
+    }
+});
+app.use(limiter);
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Route for serving the info.html file
+app.get('/', (req: Request, res: Response) => {
+    const infoFilePath = path.join(__dirname, '../public/info.html');
+    res.sendFile(infoFilePath, (err) => {
+        if (err) {
+            logger.error('Error sending info.html:', err.message);
+            res.status(500).send({ Status: 'Error', Message: 'Internal Server Error' });
+        }
+    });
+});
+
+// Route for health check
+app.get('/health', (req: Request, res: Response) => {
+    res.status(200).json({ Status: 'OK' });
+});
 
 // Centralized error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

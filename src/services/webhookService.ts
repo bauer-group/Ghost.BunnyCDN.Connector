@@ -196,7 +196,10 @@ class WebhookService {
             */
 
             logger.info(`Cache purge event ${event} raised for ${url}`);
-            this.bunnyNetService.purgeCache(url);
+
+            const purgeUrl = `${url}*`;
+            this.bunnyNetService.purgeCache(purgeUrl); // Purge cache for the URL
+            this.bunnyNetService.purgeCache(baseUrl); // Purge cache for the base URL (Homepage)
         } else {
             logger.warn(`No valid URL found in payload for event: ${event}`);
             throw new Error(`No valid URL found in payload for event: ${event}`);

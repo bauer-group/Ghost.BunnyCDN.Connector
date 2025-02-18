@@ -39,6 +39,7 @@ RUN mkdir -p /data && chown -R app:app /data && chmod -R 770 /data
 WORKDIR /app
 
 # Copy built files and dependencies from the builder stage
+COPY --from=builder /usr/src/app/public ./public
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/package*.json ./
@@ -70,4 +71,4 @@ ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "dist/index.js"]
 
 # === Healthcheck ===
-#HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD curl -f http://localhost:3000/health || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD curl -f http://localhost:${PORT}/health || exit 1

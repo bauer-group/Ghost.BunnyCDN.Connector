@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost BunnyCDN Connector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #ff8500;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        main {
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        section {
+            margin-bottom: 2rem;
+        }
+        h1, h2 {
+            color: #ff8500;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            background-color: #ff8500;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        a {
+            color: #ff8500;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ghost BunnyCDN Connector</h1>
+    </header>
+    <main>
+        <section>
+            <h2>About This Service</h2>
+            <p>The Ghost BunnyCDN Connector is a Node.js service that registers and processes webhooks to automatically invalidate the cache of BunnyCDN.</p>
+        </section>
+        <section>
+            <h2>Features</h2>
+            <ul>
+                <li>Registration of webhooks</li>
+                <li>Processing of webhook requests</li>
+                <li>Automatic cache invalidation</li>
+                <li>Health check via <code>/health</code> endpoint</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Configuration</h2>
+            <p>The application can be configured via environment variables. Here are the most important variables:</p>
+            <ul>
+                <li><code>GHOST_URL</code>: The URL of your Ghost CMS</li>
+                <li><code>GHOST_CDN_BASE_URL</code>: The base URL of your public website</li>
+                <li><code>GHOST_ADMIN_API_SECRET</code>: The Admin API Secret of your Ghost CMS</li>
+                <li><code>GHOST_WEBHOOK_TARGET</code>: The URL to which webhooks are sent</li>
+                <li><code>GHOST_WEBHOOK_SECRET</code>: The secret for webhook authentication</li>
+                <li><code>BUNNYCDN_API_KEY</code>: Your API key for BunnyCDN</li>
+            </ul>
+            <p>Example of a <code>.env</code> file:</p>
+            <pre><code>GHOST_URL=http://localhost:2368
+GHOST_CDN_BASE_URL=https://public-site.com
+GHOST_ADMIN_API_SECRET=some-secure-secret
+GHOST_WEBHOOK_TARGET=http://localhost:3000
+GHOST_WEBHOOK_SECRET=some-secure-webhook-secret
+BUNNYCDN_API_KEY=your_api_key</code></pre>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 BAUER GROUP</p>
+    </footer>
+</body>
+</html>
