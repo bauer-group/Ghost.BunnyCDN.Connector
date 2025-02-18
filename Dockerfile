@@ -48,6 +48,7 @@ EXPOSE 3000
 # === Environment Variables ===
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV LOG_LEVEL=debug
 
 ENV GHOST_URL=http://localhost:2368
 ENV GHOST_ADMIN_API_SECRET=

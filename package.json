@@ -9,6 +9,7 @@
     "dev": "ts-node src/index.ts",
     "test": "jest",
     "install-dependencies": "npm install",
+    "update-dependencies": "npm update",
     "docker-debug": "docker compose --env-file .env up --build"
   },
   "repository": {
@@ -27,11 +28,15 @@
     "@tryghost/admin-api": "^1.10.0",
     "axios": "^1.6.0",
     "body-parser": "^1.20.0",
+    "compression": "^1.8.0",
     "dotenv": "^16.4.0",
     "express": "^4.20.0",
-    "winston": "^3.12.0"
+    "helmet": "^7.1.0",
+    "winston": "^3.12.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
+    "@types/compression": "^1.7.5",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.0.2",
