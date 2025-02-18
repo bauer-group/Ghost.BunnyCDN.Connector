@@ -12,6 +12,7 @@ class Config {
     public static GHOST_ADMIN_API_SECRET: string = process.env.GHOST_ADMIN_API_SECRET || '';
     public static GHOST_WEBHOOK_SECRET: string = process.env.GHOST_WEBHOOK_SECRET || crypto.randomBytes(20).toString('hex'); // Generate random secret if not set
     public static GHOST_WEBHOOK_TARGET: string = process.env.GHOST_WEBHOOK_TARGET || 'http://localhost:3000';
+    public static BUNNYCDN_API_KEY: string = process.env.BUNNYCDN_API_KEY || '';
 
     public static RequiredWebhooks = [
         "site.changed",
@@ -45,6 +46,16 @@ class Config {
 
         if (!this.GHOST_WEBHOOK_SECRET) {
             logger.warn('GHOST_WEBHOOK_SECRET is not set. Generating a random secret.  This is not suitable for production.');
+        }
+
+        if (!this.GHOST_WEBHOOK_TARGET) {
+            logger.error('GHOST_WEBHOOK_TARGET is not set');
+            throw new Error('GHOST_WEBHOOK_TARGET is not set');
+        }
+
+        if (!this.BUNNYCDN_API_KEY) {
+            logger.error('BUNNYCDN_API_KEY is not set.');
+            throw new Error('BUNNYCDN_API_KEY is not set');
         }
     }
 }

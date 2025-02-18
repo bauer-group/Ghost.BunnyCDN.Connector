@@ -19,17 +19,21 @@ RUN npm run build
 ##########################
 #### Production stage ####
 ##########################
-FROM node:22-slim
+FROM node:22-alpine
 
 # Metadata
 LABEL vendor="BAUER GROUP"
 LABEL maintainer="Karl Bauer <karl.bauer@bauer-group.com>"
 
+# Install tini and curl
+RUN apk add --no-cache tini curl
+
 # Create a new user and group
-RUN groupadd -r app && useradd -r -g app app
+RUN addgroup -g 1005 app && \
+    adduser -u 1005 -G app -s /bin/sh -D app
 
 # Ensure /data exists and set correct permissions
-RUN mkdir -p /data && chown app:app /data
+RUN mkdir -p /data && chown -R app:app /data && chmod -R 770 /data
 
 # Create app directory
 WORKDIR /app
@@ -54,12 +58,15 @@ ENV GHOST_URL=http://localhost:2368
 ENV GHOST_ADMIN_API_SECRET=
 ENV GHOST_WEBHOOK_SECRET=
 ENV GHOST_WEBHOOK_TARGET=http://localhost:3000
+ENV BUNNYCDN_API_KEY=
 
 # === Volumes ===
 VOLUME /data
 
 # === Application Start ===
-CMD [ "npm", "start" ]
+#CMD [ "npm", "start" ]
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["node", "dist/index.js"]
 
 # === Healthcheck ===
 #HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 CMD curl -f http://localhost:3000/health || exit 1

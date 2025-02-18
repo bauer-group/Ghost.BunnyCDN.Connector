@@ -59,13 +59,32 @@ const server = app.listen(port, async () => {
 });
 
 // Handle shutdown
-const shutdownHandler = (signal: string) => {
-    logger.info(`🛑 ${signal} signal received: closing HTTP server`);
+const shutdownHandler = async (signal: string) => {
+    logger.info(`🛑 ${signal} signal received: starting graceful shutdown...`);
+    
+    // Set timeout for graceful shutdown (default Docker timeout is 10s)
+    const shutdownTimeout = setTimeout(() => {
+        logger.error('💥 Forceful shutdown due to timeout');
+        process.exit(1);
+    }, 9000); // 9 seconds to allow for Docker's 10s timeout
+
+    try {
+        await webhookService.deinitializeWebhooks();        
+    } catch (error: any) {
+        logger.error('❌ Failed to deinitialize webhooks:', error.message);
+    }    
+
     server.close(() => {
+        clearTimeout(shutdownTimeout);
         logger.debug('HTTP server closed');
+        logger.info(`⬇ Server Stopped @ ${Config.GHOST_WEBHOOK_TARGET} (http://0.0.0.0:${port})`);
         process.exit(0);
     });
+
+    // Stop accepting new connections
+    server.unref();
 };
 
+// Handle Docker stop signals
 process.on('SIGTERM', () => shutdownHandler('SIGTERM'));
 process.on('SIGINT', () => shutdownHandler('SIGINT'));
