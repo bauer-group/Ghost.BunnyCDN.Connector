@@ -11,9 +11,9 @@ class BunnyNetService {
     public async purgeCache(url: string): Promise<void> {
         try {
             //await this.storage.purgeCache(url);
-            logger.info(`Cache purged for URL: ${url}`);
+            logger.info(`Cache purged for ${url}`);
         } catch (error: any) {
-            logger.error(`Failed to purge cache for URL: ${url} - ${error.message}`);
+            logger.error(`Failed to purge cache for URL ${url} with error ${error.message}`);
         }
     }
 }

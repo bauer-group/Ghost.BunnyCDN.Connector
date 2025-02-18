@@ -9,22 +9,23 @@ dotenv.config();
  */
 class Config {
     public static GHOST_URL: string = process.env.GHOST_URL || 'http://localhost:2368';
+    public static GHOST_CDN_BASE_URL: string = process.env.GHOST_CDN_BASE_URL || '';
     public static GHOST_ADMIN_API_SECRET: string = process.env.GHOST_ADMIN_API_SECRET || '';
     public static GHOST_WEBHOOK_SECRET: string = process.env.GHOST_WEBHOOK_SECRET || crypto.randomBytes(20).toString('hex'); // Generate random secret if not set
     public static GHOST_WEBHOOK_TARGET: string = process.env.GHOST_WEBHOOK_TARGET || 'http://localhost:3000';
     public static BUNNYCDN_API_KEY: string = process.env.BUNNYCDN_API_KEY || '';
 
     public static RequiredWebhooks = [
-        "site.changed",
-        "post.added",
-        "post.deleted",
-        "post.edited",
+        //"site.changed",
+        //"post.added",
+        //"post.deleted",
+        //"post.edited",
         "post.published",
         "post.published.edited",
         "post.unpublished",
-        "page.added",
-        "page.deleted",
-        "page.edited",
+        //"page.added",
+        //"page.deleted",
+        //"page.edited",
         "page.published",
         "page.published.edited",
         "page.unpublished"
@@ -39,13 +40,18 @@ class Config {
             logger.error('GHOST_URL is not set');
             throw new Error('GHOST_URL is not set');
         }
+        
+        if (!this.GHOST_CDN_BASE_URL) {            
+            logger.warn('GHOST_CDN_BASE_URL is not set. This is not suitable for production.');
+        }
+
         if (!this.GHOST_ADMIN_API_SECRET) {
             logger.error('GHOST_ADMIN_API_SECRET is not set');
             throw new Error('GHOST_ADMIN_API_SECRET is not set');
         }
 
         if (!this.GHOST_WEBHOOK_SECRET) {
-            logger.warn('GHOST_WEBHOOK_SECRET is not set. Generating a random secret.  This is not suitable for production.');
+            logger.warn('GHOST_WEBHOOK_SECRET is not set. Generating a random secret. This is not suitable for production.');
         }
 
         if (!this.GHOST_WEBHOOK_TARGET) {

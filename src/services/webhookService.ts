@@ -57,7 +57,7 @@ class WebhookService {
                         const newWebhookId = response.webhooks?.[0]?.id ?? response.id;
                         this.webhookIds[event] = newWebhookId;
                         successfulCount++;
-                        logger.info(`Webhook for event "${event}" added.`);
+                        logger.info(`Webhook for event "${event}" with url "${targetUrl}" added.`);
                     } else {
                         logger.error(`Failed to add webhook for event "${event}": Invalid response from server.`);
                         failedWebhooks.push(event);
@@ -74,7 +74,7 @@ class WebhookService {
                         const newWebhookId = editResponse.webhooks?.[0]?.id ?? editResponse.id;
                         this.webhookIds[event] = newWebhookId;
                         successfulCount++;
-                        logger.info(`Webhook for event "${event}" updated.`);
+                        logger.info(`Webhook for event "${event}" with url "${targetUrl}" updated.`);
                     } else {
                         logger.error(`Failed to update webhook for event "${event}": Invalid response from server.`);
                         failedWebhooks.push(event);
@@ -175,20 +175,47 @@ class WebhookService {
 
     private handleEventCallback(event: string, payload: any) {
         logger.debug(`Event callback "${event}" with payload: ${JSON.stringify(payload)} triggered`);
-        
-        
-        const { post, page } = payload;
 
-        if (event === 'site.changed') {
-            //xxxxxxxxxx
-            return;
+        if (!Config.GHOST_CDN_BASE_URL) {
+            logger.warn(`GHOST_CDN_BASE_URL is not set. Cannot purge cache for event: ${event}`);
+            throw new Error(`GHOST_CDN_BASE_URL is not set. Cannot purge cache.`);
         }
+
+        const { post, page } = payload;
     
-        if (!((post && post.url) || (page && page.url))) {
-            const url = post?.url || page?.url;
+        const slug = post?.current?.slug || page?.current?.slug;
+        const baseUrl = Config.GHOST_CDN_BASE_URL.replace(/\/+$/, ''); // Remove trailing slashes
+        const url = slug ? `${baseUrl}/${slug}` : null;
+
+        if (url) {
+            /*
+            if (!url.startsWith(Config.GHOST_CDN_BASE_URL)) {
+                logger.warn(`URL "${url}" does not start with ${Config.GHOST_CDN_BASE_URL}. Cannot purge cache for event: ${event}`);
+                throw new Error(`URL "${url}" does not start with ${Config.GHOST_CDN_BASE_URL}. Cannot purge cache for this url.`);
+            }
+            */
+
+            logger.info(`Cache purge event ${event} raised for ${url}`);
             this.bunnyNetService.purgeCache(url);
+        } else {
+            logger.warn(`No valid URL found in payload for event: ${event}`);
+            throw new Error(`No valid URL found in payload for event: ${event}`);
         }
     }
 }
 
 export default WebhookService;
+
+/*
+{
+  "post": {
+    "current": {
+      "id": "67b47c17564f5400014ae74b",
+      "uuid": "ca191e7c-2bea-4595-937b-c59e32275801",
+      "title": "CDN Tester",
+      "slug": "cdn-tester",
+      "url": "https://my-site.com/p/ca191e7c-2bea-4595-937b-c59e32275801/"
+    }
+  }
+}
+*/

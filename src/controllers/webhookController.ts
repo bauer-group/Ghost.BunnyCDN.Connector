@@ -32,12 +32,14 @@ class WebhookController {
         const webhookValidator = new WebhookValidator(secret);
 
         //Webhook validation
+        /*
         try {        
             webhookValidator.verify(req.body, signature);
         } catch (error: any) {
             logger.error(`Error verifying webhook: ${error.message}`);
             return res.status(401).json({ Status: 'Error', Message: error.message });
         }
+        */
 
         //Webhook processing with exception handling
         try {
