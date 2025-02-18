@@ -25,6 +25,16 @@ FROM node:22-alpine
 LABEL vendor="BAUER GROUP"
 LABEL maintainer="Karl Bauer <karl.bauer@bauer-group.com>"
 
+# Opencontainers Metadata
+LABEL org.opencontainers.image.title="Ghost BunnyCDN Connector"
+LABEL org.opencontainers.image.version="0.1.0"
+LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.vendor="BAUER GROUP"
+LABEL org.opencontainers.image.authors="Karl Bauer <karl.bauer@bauer-group.com>"
+LABEL org.opencontainers.image.source="https://github.com/bauer-group/Ghost.BunnyCDN.Connector"
+LABEL org.opencontainers.image.description="$(cat README.md)"
+
+
 # Install tini and curl
 RUN apk add --no-cache tini curl
 

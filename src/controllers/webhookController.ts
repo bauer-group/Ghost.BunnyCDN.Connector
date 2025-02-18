@@ -26,20 +26,16 @@ class WebhookController {
      * @returns A Promise that resolves to an Express Response.
      */
     public handleWebhook = async (req: Request, res: Response): Promise<Response> => {
-        
-        const signature = req.headers['x-ghost-signature'] as string;
+        //Webhook validation
         const secret = Config.GHOST_WEBHOOK_SECRET;
         const webhookValidator = new WebhookValidator(secret);
-
-        //Webhook validation
-        /*
-        try {        
-            webhookValidator.verify(req.body, signature);
+        try {
+            const signature = req.headers['x-ghost-signature'] as string;            
+            webhookValidator.verify(req.body, signature);            
         } catch (error: any) {
             logger.error(`Error verifying webhook: ${error.message}`);
             return res.status(401).json({ Status: 'Error', Message: error.message });
         }
-        */
 
         //Webhook processing with exception handling
         try {

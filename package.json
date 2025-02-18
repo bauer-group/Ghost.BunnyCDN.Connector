@@ -1,7 +1,7 @@
 {
   "name": "@bauer-group/ghost-bunnycdn-connector",
-  "version": "0.0.1",
-  "description": "Ghost CMS Service für automatische BunnyCDN Cache-Invalidierung",
+  "version": "0.1.0",
+  "description": "Ghost CMS service for automatic BunnyCDN cache validation",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -10,6 +10,7 @@
     "test": "jest",
     "install-dependencies": "npm install",
     "update-dependencies": "npm update",
+    "upgrade-dependencies": "npx npm-check-updates -u && npm update",
     "docker-debug": "docker compose --env-file .env up --build"
   },
   "repository": {
@@ -25,25 +26,26 @@
   "author": "BAUER GROUP (Karl Bauer)",
   "license": "MIT",
   "dependencies": {
-    "@tryghost/admin-api": "^1.10.0",
-    "axios": "^1.6.0",
-    "body-parser": "^1.20.0",
+    "@tryghost/admin-api": "^1.13.12",
+    "axios": "^1.7.9",
+    "body-parser": "^1.20.3",
     "compression": "^1.8.0",
-    "dotenv": "^16.4.0",
-    "express": "^4.20.0",
-    "helmet": "^7.1.0",
-    "winston": "^3.12.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@types/compression": "^1.7.5",
     "@types/dotenv": "^6.1.1",
-    "@types/express": "^4.17.13",
-    "@types/jest": "^27.0.2",
-    "@types/node": "^16.11.7",
-    "jest": "^27.0.6",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.5.4"
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.4",
+    "jest": "^29.7.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   },
   "engines": {
     "node": ">=20.0.0"

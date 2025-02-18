@@ -19,7 +19,8 @@ app.set('trust proxy', 1); //trust first proxy
 // Middleware setup
 app.use(helmet());
 app.use(compression());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '16mb' }));
+app.use(bodyParser.urlencoded({ limit: '16mb', extended: true }));
 
 // Rate limiting middleware
 const RATE_LIMIT_MESSAGE = { Status: 'Error', Message: 'Too many requests, please try again later.' };
@@ -54,15 +55,15 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 // Centralized error handling middleware
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
     logger.error('Unhandled error:', err);
 
     if (err instanceof SyntaxError && 'body' in err) {
         logger.error('Error parsing JSON body:', err.message);
-        return res.status(400).send({ Status: 'Error', Message: 'Invalid JSON!' });
+        res.status(400).send({ Status: 'Error', Message: 'Invalid JSON!' });
+        return;
     }
 
-    // Generic error response
     res.status(500).send({ Status: 'Error', Message: 'Internal Server Error' });
 });
 
@@ -80,9 +81,11 @@ const webhookController = new WebhookController(webhookService);
 
 const requiredWebhooks = Config.RequiredWebhooks;
 
-requiredWebhooks.forEach(event => {
+requiredWebhooks.forEach((event: string) => {
     const eventRoute = event.replace(/\./g, '-');
-    app.post(`/webhook/${eventRoute}`, (req, res) => webhookController.handleWebhook(req, res));
+    app.post(`/webhook/${eventRoute}`, (req: Request, res: Response, next: NextFunction) => {
+        webhookController.handleWebhook(req, res).catch(next);
+    });
 });
 
 // Start the server
