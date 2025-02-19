@@ -89,7 +89,7 @@ docker run -d --name ghost-bunnycdn-connector \
   -e GHOST_WEBHOOK_SECRET=some-secure-webhook-secret \
   -e BUNNYCDN_API_KEY=your_api_key \
   -p 3000:3000 \
-  bauer-group/ghost-bunnycdn-connector:latest
+  bauergroup/ghost-bunnycdn-connector:latest
 ```
 
 Or use it directly in `docker-compose.yml`:
@@ -98,7 +98,7 @@ Or use it directly in `docker-compose.yml`:
 version: '3'
 services:
   ghost-bunnycdn-connector:
-    image: bauer-group/ghost-bunnycdn-connector:latest
+    image: bauergroup/ghost-bunnycdn-connector:latest
     restart: unless-stopped
     env_file: .env
     environment:

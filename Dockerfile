@@ -63,7 +63,7 @@ EXPOSE 3000
 # === Environment Variables ===
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV LOG_LEVEL=debug
+ENV LOG_LEVEL=info
 
 ENV GHOST_URL=http://localhost:2368
 ENV GHOST_CDN_BASE_URL=
