@@ -17,13 +17,13 @@ docker compose --env-file .env up --build
 #### 🏗️ Vollständiger Build
 
 ```bash
-docker build . --no-cache -t bauergroup/ghost-bunnycdn-connector:0.1 -t bauergroup/ghost-bunnycdn-connector:latest
+docker build . --no-cache -t bauergroup/ghost-bunnycdn-connector:0.2 -t bauergroup/ghost-bunnycdn-connector:latest
 ```
 
 #### 🔄 Inkrementeller Build
 
 ```bash
-docker build . -t bauergroup/ghost-bunnycdn-connector:0.1 -t bauergroup/ghost-bunnycdn-connector:latest
+docker build . -t bauergroup/ghost-bunnycdn-connector:0.2 -t bauergroup/ghost-bunnycdn-connector:latest
 ```
 
 ### ▶️ Ausführen / Starten
@@ -37,7 +37,7 @@ docker run --rm -i -t bauergroup/ghost-bunnycdn-connector:latest /bin/bash
 #### 🔄 Inkrementeller Build mit interaktivem Start
 
 ```bash
-docker build . -t bauergroup/ghost-bunnycdn-connector:0.1 -t bauergroup/ghost-bunnycdn-connector:latest && docker run --rm -i -t bauergroup/ghost-bunnycdn-connector:latest /bin/bash
+docker build . -t bauergroup/ghost-bunnycdn-connector:0.2 -t bauergroup/ghost-bunnycdn-connector:latest && docker run --rm -i -t bauergroup/ghost-bunnycdn-connector:latest /bin/bash
 ```
 
 ---
@@ -77,19 +77,19 @@ docker buildx rm multiplattform
 #### 📦 Build für alle Plattformen (ohne Push)
 
 ```bash
-docker buildx build --platform linux/amd64,linux/arm64 . --no-cache -t bauergroup/ghost-bunnycdn-connector:0.1 -t bauergroup/ghost-bunnycdn-connector:latest
+docker buildx build --platform linux/amd64,linux/arm64 . --no-cache -t bauergroup/ghost-bunnycdn-connector:0.2 -t bauergroup/ghost-bunnycdn-connector:latest
 ```
 
 #### 🏠 Erstelltes Image in den lokalen Docker-Server laden
 
 ```bash
-docker buildx build --load -t bauergroup/ghost-bunnycdn-connector:0.1 -t bauergroup/ghost-bunnycdn-connector:latest .
+docker buildx build --load -t bauergroup/ghost-bunnycdn-connector:0.2 -t bauergroup/ghost-bunnycdn-connector:latest .
 ```
 
 #### 🚀 Build & Push zum Registry
 
 ```bash
-docker buildx build --push --platform linux/amd64,linux/arm64 . --no-cache -t bauergroup/ghost-bunnycdn-connector:0.1 -t bauergroup/ghost-bunnycdn-connector:latest
+docker buildx build --push --platform linux/amd64,linux/arm64 . --no-cache -t bauergroup/ghost-bunnycdn-connector:0.2 -t bauergroup/ghost-bunnycdn-connector:latest
 ```
 
 ---
@@ -102,7 +102,7 @@ Für eine erweiterte Build-Konfiguration mit Metadaten (z. B. Git-Revision und E
 docker build --label org.opencontainers.image.revision=$(git rev-parse HEAD) \
              --label org.opencontainers.image.ref.name=$(git rev-parse --abbrev-ref HEAD) \
              --label org.opencontainers.image.created=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
-             -t bauergroup/ghost-bunnycdn-connector:0.1 \
+             -t bauergroup/ghost-bunnycdn-connector:0.2 \
              -t bauergroup/ghost-bunnycdn-connector:latest .
 ```
 

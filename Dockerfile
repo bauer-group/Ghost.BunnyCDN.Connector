@@ -38,6 +38,9 @@ LABEL org.opencontainers.image.description="$(cat README.md)"
 # Install tini and curl
 RUN apk add --no-cache tini curl
 
+# Install pm2 (process manager [pm2-runtime])
+RUN npm install pm2 -g
+
 # Create a new user and group
 RUN addgroup -g 1005 app && \
     adduser -u 1005 -G app -s /bin/sh -D app
@@ -78,7 +81,8 @@ VOLUME /data
 # === Application Start ===
 #CMD [ "npm", "start" ]
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["node", "dist/index.js"]
+#CMD ["node", "dist/index.js"]
+CMD ["pm2-runtime", "dist/index.js"]
 
 # === Healthcheck ===
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD curl -f http://localhost:${PORT}/health || exit 1

@@ -1,6 +1,6 @@
 {
   "name": "@bauer-group/ghost-bunnycdn-connector",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Ghost CMS service for automatic BunnyCDN cache validation",
   "main": "dist/index.js",
   "scripts": {
